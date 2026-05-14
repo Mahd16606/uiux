@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CampusBites</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+<!-- S1: Splash -->
+<div id="s1" class="screen">
+<div class="si">
+<svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="12" cy="12" r="9"/><path d="M6 4v6a3 3 0 0 0 6 0V4"/><path d="M9 4v16"/><path d="M18 4v9a3 3 0 0 1-6 0V4"/>
+</svg></div>
+<div class="st"><span class="c">Campus</span><span class="b">Bites</span></div>
+<div class="ss">Skip the line. Grab your bite.</div>
+<div class="sb"><div class="sbf" id="sbf"></div></div>
+</div>
+
+<!-- S2: Login -->
+<div id="s2" class="screen">
+<div class="li">
+<svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="30" height="30">
+<circle cx="12" cy="12" r="9"/><path d="M6 4v6a3 3 0 0 0 6 0V4"/><path d="M9 4v16"/><path d="M18 4v9a3 3 0 0 1-6 0V4"/>
+</svg></div>
+<div class="lt">Welcome Back</div>
+<div class="ls">Sign in to order from your campus dhaba</div>
+<div class="fg"><label>Email</label>
+<div class="iw"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" width="16" height="16"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 7L2 7"/></svg></span>
+<input id="ei" type="email" placeholder="your@email.com"></div>
+<div id="ee" class="err"></div></div>
+<div class="fg"><label>Password</label>
+<div class="iw"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#F5A623" stroke-width="2" stroke-linecap="round" width="16" height="16"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+<input id="pi" type="password" placeholder="Enter your password"></div>
+<div id="pe" class="err"></div></div>
+<button class="bp" type="button" onclick="handleSignIn()">Sign In →</button>
+<div class="dv"><div class="dl"></div><span class="dt">or</span><div class="dl"></div></div>
+<button class="bg" onclick="guestLogin()">Continue as Guest</button>
+<div class="lf">By signing in, you agree to our Terms of Service</div>
+</div>
+
+<!-- S3: Home (Restaurant Cards + Search) -->
+<div id="s3" class="screen">
+<div class="top-bar">
+<div class="hdr"><button class="prof-icon" onclick="toggleProfile()">👤</button><div class="logo"><span>Campus</span>Bites</div></div>
+<div class="cart-wrap" onclick="showScreen(5)"><span class="ci">🛒</span><span id="cb" class="cb"></span></div>
+</div>
+<div class="search-wrap"><input id="search-input" type="text" placeholder="Search for food..." oninput="handleSearch(this.value)"></div>
+<div class="scroll-area" id="home-scroll">
+<div id="busy-banner" class="busy-banner"><span class="bb-icon">🕐</span><span>Restaurant currently busy, please try again in 5 minutes.</span></div>
+<div id="track-banner" class="track-active-banner" onclick="showScreen(8)"><span class="dot"></span><span>Active Order Tracking — Tap to view</span></div>
+<div id="reorder-banner" class="reorder-banner" onclick="dismissCompleted()">🔄 Previous order completed — Tap to order again</div>
+<div id="home-content"></div>
+</div>
+</div>
+
+<!-- S4: Restaurant Menu -->
+<div id="s4" class="screen">
+<div class="rmh"><button class="back" onclick="showScreen(3)">←</button><span class="rmh-t" id="rm-title">Menu</span></div>
+<div class="cpills" id="rm-cpills"></div>
+<div class="rm-scroll" id="rm-scroll">
+<div id="rm-busy" class="busy-banner"><span class="bb-icon">🕐</span><span>Restaurant currently busy, please try again in 5 minutes.</span></div>
+<div class="mgrid" id="rm-grid"></div>
+</div>
+</div>
+
+<!-- S5: Cart -->
+<div id="s5" class="screen">
+<div class="ch"><button class="back" onclick="showScreen(3)">←</button><span class="cht">Your Cart</span><button class="clr" onclick="clearCart()">Clear</button></div>
+<div class="cart-scroll" id="cl"></div>
+<div class="ct">
+<div class="trr"><span>Subtotal</span><span id="sa">Rs. 0</span></div><div class="dsh"></div>
+<div class="trr t"><span>Total</span><span id="ta">Rs. 0</span></div>
+<div class="pt" id="pt">
+<button class="o a" data-m="cash" onclick="setPay('cash')">💵 Cash</button>
+<button class="o" data-m="online" onclick="setPay('online')">📱 Online</button>
+</div>
+<button class="bpl" id="place-btn" onclick="placeOrder()">Place Order →</button>
+</div>
+</div>
+
+<!-- S6: EasyPaisa -->
+<div id="s6" class="screen">
+<div class="eh"><button class="back" onclick="showScreen(5)">←</button><span class="t">Payment</span></div>
+<!-- FIX 4: Simulated payment disclaimer for demo/academic context -->
+<div style="background:#FFF3E0;border:1.5px solid #FFB300;border-radius:10px;padding:8px 14px;font-size:11px;font-weight:600;color:#E65100;text-align:center;width:100%;margin-bottom:4px">🎓 PROTOTYPE — Simulated Payment Only</div>
+<div class="el">easypaisa</div>
+<div class="epp">Enter your 4-digit PIN to confirm</div>
+<div class="eab"><div class="l">Amount to Pay</div><div class="a" id="epa">Rs. 0</div></div>
+<div class="pr"><div class="pb f">•</div><div class="pb f">•</div><div class="pb f">•</div><div class="pb f">•</div></div>
+<button class="bgr" onclick="confirmOnline()">Confirm Payment →</button>
+<div class="ef">🔒 Secured by EasyPaisa encryption</div>
+</div>
+
+<!-- S7: Order Placed -->
+<div id="s7" class="screen o-screen">
+<div class="oc">✓</div>
+<div class="ot">Order Placed!</div>
+<div class="os" id="opsub">Pay Cash at Counter</div>
+<div class="otc"><div class="l">YOUR ORDER TOKEN</div><div class="t" id="optok">#000</div></div>
+<div class="te">🕐 Estimated Ready Time 8–12 minutes</div>
+<div class="ol" id="opsum"></div>
+<button class="bw" onclick="showScreen(8)">Track My Order →</button>
+</div>
+
+<!-- S8: Active Orders Dashboard -->
+<div id="s8" class="screen">
+<div class="eh"><button class="back" onclick="showScreen(3)">←</button><span class="t">Active Orders</span></div>
+<div class="cart-scroll" id="active-orders-list" style="padding: 16px; display:flex; flex-direction:column; gap:16px;">
+  <!-- Rendered by renderActiveOrders() -->
+</div>
+<div style="padding: 16px;">
+  <button class="bo" onclick="showScreen(3)">Back to Menu</button>
+</div>
+</div>
+
+<!-- S9: Staff Dashboard -->
+<div id="s9" class="screen">
+<div class="top-bar" style="border-bottom:2px solid #FF5C28"><div class="hdr"><button class="prof-icon" onclick="toggleProfile()">👤</button><span id="staff-restaurant-name" style="font-size:14px;font-weight:600;color:#23233B">Restaurant Staff</span></div><div style="font-size:11px;color:#888" id="staff-email">admin@restaurant.com</div></div>
+<div class="s9-scroll" id="staff-scroll">
+<div class="kt"><div class="kt-l">🍳 Kitchen Status</div><button class="kt-sw off" id="kt-btn" onclick="toggleKitchen()">⏸️ Pause Incoming Orders</button></div>
+<div class="kanban-tabs">
+<button class="kanban-tab a" data-k="new" onclick="switchKanban('new')">🆕 New <span class="kbc" id="kn-count">0</span></button>
+<button class="kanban-tab" data-k="preparing" onclick="switchKanban('preparing')">🔪 Preparing <span class="kbc" id="kp-count">0</span></button>
+<button class="kanban-tab" data-k="ready" onclick="switchKanban('ready')">✅ Ready <span class="kbc" id="kr-count">0</span></button>
+</div>
+<div id="order-queue"></div>
+<div class="ch-section"><button class="ch-toggle" onclick="toggleCompleted()">📦 Completed History (<span id="ch-count">0</span>)</button><div class="ch-list" id="ch-list"></div></div>
+<div class="inv-section"><div class="inv-h">📦 Quick Inventory</div><div id="inv-list"></div></div>
+</div>
+</div>
+
+<!-- Overlays -->
+<div id="pm"><div class="pmr" id="pmr">Student</div><div class="pme" id="pme">u2023000@giki.edu.pk</div><button class="plo" onclick="handleLogout()">🚪 Logout</button></div>
+<div id="orm"><span class="ormi">🎉</span><div class="ormc"><div class="ormt">Order Ready!</div><div class="ormd">Your order #<span id="orm-token">000</span> is ready for pickup</div></div><button class="ormx" onclick="dismissReady()">✕</button></div>
+<div id="tt"></div>
+
+<!-- Conflict Modal -->
+<div id="conflict-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; padding:20px;">
+  <div style="background:#fff; width:100%; max-width:350px; border-radius:16px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); transform: scale(1); transition: transform 0.2s;">
+    <div style="width:48px; height:48px; border-radius:24px; background:#fff3e0; color:#FF5C28; display:flex; justify-content:center; align-items:center; margin:0 auto 16px; font-size:24px;">🛒</div>
+    <h3 style="text-align:center; margin:0 0 10px 0; font-size:18px; color:#222;">Change Restaurant?</h3>
+    <p style="text-align:center; font-size:14px; color:#666; margin:0 0 24px 0; line-height:1.5;">
+      Your cart contains items from <strong id="cm-current" style="color:#222;"></strong>. Would you like to clear your cart and start a new order with <strong id="cm-new" style="color:#222;"></strong>?
+    </p>
+    <div style="display:flex; gap:10px;">
+      <button onclick="cancelClearCart()" style="flex:1; padding:12px; border-radius:10px; border:none; background:#f0f0f0; color:#555; font-weight:600; cursor:pointer;">Cancel</button>
+      <button onclick="confirmClearCart()" style="flex:1; padding:12px; border-radius:10px; border:none; background:#FF5C28; color:#fff; font-weight:600; cursor:pointer;">Clear Cart & Add</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
